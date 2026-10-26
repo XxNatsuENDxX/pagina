@@ -17,6 +17,16 @@ body.oscuro {
   --borde: #2b3350;
   --enlace: #7ea6ff;
 }
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fondo: #11151f;
+    --tarjeta: #1a2030;
+    --texto: #ebeef5;
+    --suave: #9ba5ba;
+    --borde: #2b3350;
+    --enlace: #7ea6ff;
+  }
+}
 
 /* ---------- 2. Base ---------- */
 * { box-sizing: border-box; }

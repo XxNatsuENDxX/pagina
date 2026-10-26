@@ -155,10 +155,28 @@ function cambiarPagina(cambio) {
 
 
 // ---------- 6. MODO CLARO / OSCURO ----------
-function cambiarTema() {
-  document.body.classList.toggle('oscuro');
-  const oscuro = document.body.classList.contains('oscuro');
+const preferenciaTema = window.matchMedia('(prefers-color-scheme: dark)');
+let temaManual = false;
+
+function aplicarTema(oscuro) {
+  document.body.classList.toggle('oscuro', oscuro);
   document.getElementById('btnTema').textContent = oscuro ? "☀️" : "🌙";
+  document.getElementById('btnTema').setAttribute(
+    'aria-label',
+    oscuro ? "Cambiar a modo claro" : "Cambiar a modo oscuro"
+  );
+}
+
+aplicarTema(preferenciaTema.matches);
+preferenciaTema.addEventListener('change', evento => {
+  if (!temaManual) {
+    aplicarTema(evento.matches);
+  }
+});
+
+function cambiarTema() {
+  temaManual = true;
+  aplicarTema(!document.body.classList.contains('oscuro'));
 }
 
 
