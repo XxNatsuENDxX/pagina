@@ -16,7 +16,7 @@ export default async function handler(req, res) {
   }
 
   // 3. Usa la variable de entorno de Vercel o tu clave actual como respaldo
-  const API_KEY = process.env.GNEWS_API_KEY || "9b96faac5008c088be90aaf58c28c472";
+  const API_KEY = process.env.GNEWS_API_KEY;
 
   const url = `https://gnews.io/api/v4/search?q=${encodeURIComponent(q)}&lang=es&max=10&apikey=${API_KEY}`;
 
