@@ -1,5 +1,3 @@
-const API_KEY = "9b96faac5008c088be90aaf58c28c472";
-
 let noticias = [];        // noticias que se están mostrando
 let paginaActual = 1;
 const POR_PAGINA = 4;     // noticias por página
@@ -38,7 +36,7 @@ bEjemplos.onclick = mostrarEjemplos;
 contCategorias.appendChild(bEjemplos);
 
 
-// ---------- 3. LLAMADA A LA API ----------
+// ---------- 3. LLAMADA A LA API (A TRAVÉS DEL PROXY DE VERCEL) ----------
 // Se ejecuta al enviar el formulario
 function buscar(event) {
   event.preventDefault();   // evita recargar la página
@@ -51,8 +49,8 @@ function consultarApi(termino, etiqueta) {
   document.getElementById('resultados').innerHTML = "";
   document.getElementById('paginacion').style.display = "none";
 
-  const url = "https://gnews.io/api/v4/search?q=" + encodeURIComponent(termino) +
-              "&lang=es&max=10&apikey=" + API_KEY;
+  // Llamamos a nuestra propia función en /api/noticias para evitar el bloqueo de CORS
+  const url = "/api/noticias?q=" + encodeURIComponent(termino);
 
   fetch(url)
     .then(response => {
@@ -69,6 +67,9 @@ function consultarApi(termino, etiqueta) {
       return response.json();   // convierte la respuesta JSON en objeto
     })
     .then(data => {
+      if (!data.articles) {
+        throw new Error("Formato de respuesta inesperado.");
+      }
       noticias = data.articles.map(n => ({ ...n, etiqueta: etiqueta }));
       paginaActual = 1;
 
@@ -162,8 +163,6 @@ function cambiarTema() {
 
 
 // ---------- 7. EJEMPLOS DE DEMOSTRACIÓN ----------
-// Son ejemplos ilustrativos (no noticias recientes). Cada uno enlaza
-// a la fuente oficial o al medio dominicano donde se puede consultar el tema.
 const EJEMPLOS = [
   { etiqueta: "Béisbol", title: "El clásico Licey vs. Escogido, la gran rivalidad de la pelota invernal",
     description: "La Liga de Béisbol Dominicano (LIDOM) reúne seis equipos: Tigres del Licey, Leones del Escogido, Águilas Cibaeñas, Estrellas Orientales, Toros del Este y Gigantes del Cibao.",
